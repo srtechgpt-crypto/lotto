@@ -1,18 +1,18 @@
 "use strict";
 
-const VERSION = "5bf80cb8c448";
+const VERSION = "905984b44154";
 const FILES = {
   ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-  "fonts/BlackHanSans.woff2": "f159826362af38709c164afc9609564cda1b91eeee55d2f1d7214777bcaecbcd",
-  "fonts/IBMPlexSansKR-400.woff2": "fc71fd17323bad4210c3678a4764abcc73207c7edd4f2eb69af873ad04531a5f",
-  "fonts/IBMPlexSansKR-600.woff2": "e59a717b7cf733bb3e3623306c7d940e5bbd2550bcc0802058d2e7c79309022b",
+  "fonts/BlackHanSans.woff2": "7dc14f9ec9bc8c5f24ae658edcad8dfc12c048372c86a7aedca6f8e4a305a64e",
+  "fonts/IBMPlexSansKR-400.woff2": "b1c67eaed1570852ca2687d95a849703bf099842a7cd9bbbeac9666971d7b15f",
+  "fonts/IBMPlexSansKR-600.woff2": "d337a2a918fafa269dc043957a1a98be1268ba06cc1704555704badc48fd840d",
   "fonts/OFL-BlackHanSans.txt": "c324192c8b3a988bae45a9a7e4ac1258b684739003bda114e0523423440457c9",
   "fonts/OFL-IBMPlexSansKR.txt": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
-  "icons/icon-192.png": "756086d8a76278761966941d9fb5f9626f7dbc3c5e14dbc2f46cc48a66400c34",
-  "icons/icon-512.png": "f7d1264b0ecd517d2c66b4ea33e2872d25e4d6b9382aff89110be08424a02691",
-  "icons/icon-maskable-512.png": "c129938df2d4857f0b9f9f84a14d628cacd319651a4d3cb1bc9b0a16ac310a8c",
-  "index.html": "5519fd7c72aad96e16e7bb41126957c3ebaf51025014aabf297091342628c52d",
-  "manifest.webmanifest": "77e240fe5d55e178a4d86d1aeb57de39f411e1497c869cbbf400dbb73ab7fe86"
+  "icons/icon-192.png": "ed5c1fe1a967bb43d25e1454a92e8cd75a56c7237e600a581b364ec18db6a982",
+  "icons/icon-512.png": "43a57f4b652d0a2c03da2ec9a0b279b30edd6808ed89d050750cc3da0684260a",
+  "icons/icon-maskable-512.png": "cf964569258fda8ff101d207c8800442ca416b51b3ccd4f6f098c62feec8a05e",
+  "index.html": "ba18f6565f2d7b256b3c0aadc689f8cbcac73db6f74ae005635da77ebc347c61",
+  "manifest.webmanifest": "a3a9c1e97b0e80a8b19aa96df3030ed2b7948e391d5b8daf78a86479ed189e94"
 };
 const CACHE_NAME = "srlotto-" + VERSION;
 const fileURL = name => new URL(name, self.registration.scope).href;

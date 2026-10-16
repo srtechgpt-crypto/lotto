@@ -2,64 +2,98 @@
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#c8243c">
+<meta name="theme-color" content="#070b24">
 <link rel="icon" href="icons/icon-192.png">
 <title>로또 추첨기</title>
 <style>@font-face{font-family:"Black Han Sans";src:url("fonts/BlackHanSans.woff2") format("woff2");font-display:swap}@font-face{font-family:"IBM Plex Sans KR";font-weight:400;src:url("fonts/IBMPlexSansKR-400.woff2") format("woff2");font-display:swap}@font-face{font-family:"IBM Plex Sans KR";font-weight:600;src:url("fonts/IBMPlexSansKR-600.woff2") format("woff2");font-display:swap}</style>
 <style>
-/* 구성: 폰 세로 한 줄. 로또 용지처럼 흰 바탕에 붉은 인쇄색, 점선으로 게임을 나눈다 */
+/* 구성: 폰 세로 한 줄. 토요일 추첨 방송처럼 밤하늘 남색 바탕에 금색, 공은 반짝이는 구슬 */
 :root {
-  --paper: #fbf8f8;
-  --sheet: #ffffff;
-  --ink: #2a2224;
-  --muted: #76696c;
-  --rule: #efd6da;
-  --red: #c8243c;
-  --on-red: #ffffff;
-  --faint: #ebebeb;
+  --night: #070b24;
+  --night-2: #141d52;
+  --panel: rgba(23, 31, 82, 0.72);
+  --panel-solid: #161e55;
+  --ink: #f4f1e6;
+  --muted: #aab3dc;
+  --rule: rgba(245, 200, 76, 0.28);
+  --gold: #f5c84c;
+  --gold-2: #ffe7a0;
+  --gold-deep: #c8901c;
+  --on-gold: #1a1530;
+  --bad: #ff8a98;
+  --faint: rgba(255, 255, 255, 0.12);
+  --red: var(--gold);
   --display: "Black Han Sans", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
   --body: "IBM Plex Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #1b1718; --sheet: #241f20; --ink: #f2eaeb; --muted: #b3a5a8;
-    --rule: #43363a; --red: #ff5c72; --on-red: #1b1718; --faint: #3b3436;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #1b1718; --sheet: #241f20; --ink: #f2eaeb; --muted: #b3a5a8;
-  --rule: #43363a; --red: #ff5c72; --on-red: #1b1718; --faint: #3b3436;
   color-scheme: dark;
 }
-body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.55; }
-.wrap { max-width: 480px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 32px; display: grid; gap: 16px; }
-h1 { font-family: var(--display); font-weight: 400; font-size: 30px; line-height: 1.1; color: var(--red); margin: 0; letter-spacing: 0.02em; }
+html { background: var(--night); }
+body { margin: 0; }
+body {
+  min-height: 100vh; color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.55;
+  background:
+    radial-gradient(1.5px 1.5px at 12% 18%, rgba(255,255,255,0.75), transparent 60%),
+    radial-gradient(1px 1px at 78% 9%, rgba(255,255,255,0.6), transparent 60%),
+    radial-gradient(1.5px 1.5px at 63% 31%, rgba(255,240,200,0.7), transparent 60%),
+    radial-gradient(1px 1px at 28% 47%, rgba(255,255,255,0.5), transparent 60%),
+    radial-gradient(1.5px 1.5px at 90% 58%, rgba(255,255,255,0.6), transparent 60%),
+    radial-gradient(1px 1px at 8% 76%, rgba(255,240,200,0.55), transparent 60%),
+    radial-gradient(1px 1px at 52% 88%, rgba(255,255,255,0.45), transparent 60%),
+    radial-gradient(120% 60% at 50% -10%, #2a3a9a 0%, var(--night-2) 38%, var(--night) 75%);
+  background-attachment: fixed;
+}
+.wrap { max-width: 480px; margin: 0 auto; padding-inline: 16px; padding-block: 22px 32px; display: grid; gap: 16px; }
+h1 {
+  font-family: var(--display); font-weight: 400; font-size: 32px; line-height: 1.1; margin: 0; letter-spacing: 0.03em;
+  background: linear-gradient(180deg, var(--gold-2) 10%, var(--gold) 55%, var(--gold-deep) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 2px 6px rgba(245, 200, 76, 0.35));
+}
+h1 .star { font-size: 0.7em; vertical-align: 0.18em; }
 .basis { margin: 0; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; word-break: keep-all; }
-.basisRow { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 6px; }
-.update { flex: none; font: inherit; font-size: 14px; font-weight: 600; color: var(--red); background: var(--sheet); border: 1.5px solid var(--red); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.basisRow { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; }
+.update { flex: none; font: inherit; font-size: 14px; font-weight: 600; color: var(--gold); background: rgba(245, 200, 76, 0.08); border: 1.5px solid var(--gold); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
 .update:disabled { opacity: 0.6; cursor: wait; }
 .status { margin: 8px 0 0; font-size: 13px; color: var(--muted); min-height: 1.55em; }
 .status.good { color: var(--ink); }
-.status.bad { color: var(--red); }
-.moved { margin: 8px 0 0; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 10px; background: var(--sheet); font-size: 14px; }
-.moved a { color: var(--red); font-weight: 600; }
+.status.bad { color: var(--bad); }
+.moved { margin: 8px 0 0; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 10px; background: var(--panel); font-size: 14px; }
+.moved a { color: var(--gold); font-weight: 600; }
 .appState { margin: 0; color: var(--muted); font-size: 12px; text-align: center; }
-.appState button { font: inherit; font-weight: 600; color: var(--red); background: none; border: 0; text-decoration: underline; cursor: pointer; padding: 4px; }
-#draw { font-family: var(--display); font-size: 22px; background: var(--red); color: var(--on-red); border: 0; border-radius: 14px; padding: 16px; width: 100%; cursor: pointer; }
-#draw:active { transform: translateY(1px); }
-button:focus-visible, summary:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
-.games { list-style: none; margin: 0; padding: 0; background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; }
+.appState button { font: inherit; font-weight: 600; color: var(--gold); background: none; border: 0; text-decoration: underline; cursor: pointer; padding: 4px; }
+#draw {
+  font-family: var(--display); font-size: 23px; letter-spacing: 0.06em; color: var(--on-gold); border: 0; border-radius: 16px; padding: 17px; width: 100%; cursor: pointer;
+  background: linear-gradient(180deg, var(--gold-2) 0%, var(--gold) 45%, var(--gold-deep) 100%);
+  box-shadow: 0 6px 18px rgba(245, 200, 76, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+#draw:active { transform: translateY(2px); box-shadow: 0 3px 10px rgba(245, 200, 76, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+button:focus-visible, summary:focus-visible, a:focus-visible { outline: 3px solid var(--gold-2); outline-offset: 2px; }
+.games { list-style: none; margin: 0; padding: 0; background: var(--panel); border: 1px solid var(--rule); border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35); backdrop-filter: blur(4px); }
 .game { display: grid; grid-template-columns: 18px 1fr auto; align-items: center; gap: 8px; padding: 12px; border-top: 1px dashed var(--rule); }
 .game:first-child { border-top: 0; }
-.label { font-family: var(--display); color: var(--red); font-size: 16px; }
+.label { font-family: var(--display); color: var(--gold); font-size: 17px; line-height: 1; }
 .balls { display: flex; flex-wrap: wrap; gap: 5px; min-width: 0; }
-.ball { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; color: #ffffff; font-weight: 600; font-size: 14px; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35); font-variant-numeric: tabular-nums; }
+.ball {
+  --c: #aaaaaa;
+  width: 31px; height: 31px; border-radius: 50%; display: grid; place-items: center; color: #ffffff; font-weight: 600; font-size: 14px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55); font-variant-numeric: tabular-nums;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.95) 0 9%, rgba(255, 255, 255, 0.35) 18%, transparent 42%),
+    radial-gradient(circle at 50% 50%, var(--c) 52%, color-mix(in srgb, var(--c) 62%, #000) 100%);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.45), 0 0 10px color-mix(in srgb, var(--c) 45%, transparent);
+}
+.ball.drop { animation: drop 520ms cubic-bezier(0.3, 1.4, 0.55, 1) both; }
+@keyframes drop {
+  0% { opacity: 0; transform: translateY(-38px) scale(0.6) rotate(-90deg); }
+  60% { opacity: 1; transform: translateY(3px) scale(1.06) rotate(10deg); }
+  100% { opacity: 1; transform: none; }
+}
 .copy { font: inherit; font-size: 13px; border: 1px solid var(--rule); background: transparent; color: var(--ink); border-radius: 8px; padding: 5px 9px; cursor: pointer; }
-.notice { margin: 0; color: var(--red); font-size: 14px; }
-.copybox { margin: 0; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 10px; background: var(--sheet); user-select: all; font-variant-numeric: tabular-nums; }
-details { background: var(--sheet); border: 1px solid var(--rule); border-radius: 12px; padding-inline: 14px; }
+.notice { margin: 0; color: var(--bad); font-size: 14px; }
+.copybox { margin: 0; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 10px; background: var(--panel-solid); user-select: all; font-variant-numeric: tabular-nums; }
+details { background: var(--panel); border: 1px solid var(--rule); border-radius: 12px; padding-inline: 14px; }
 summary { padding-block: 12px; cursor: pointer; font-weight: 600; }
+summary::marker { color: var(--gold); }
 details > div { display: grid; gap: 10px; padding-bottom: 14px; }
 .small { margin: 0; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
 .patterns { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; font-variant-numeric: tabular-nums; }
@@ -71,12 +105,15 @@ details > div { display: grid; gap: 10px; padding-bottom: 14px; }
 .axis span { text-align: center; white-space: nowrap; }
 .reasons { margin: 0; padding-left: 18px; font-variant-numeric: tabular-nums; }
 .disclaimer { margin: 0; color: var(--muted); font-size: 13px; text-align: center; }
-@media (prefers-reduced-motion: reduce) { #draw:active { transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  #draw:active { transform: none; }
+  .ball.drop { animation: none; }
+}
 </style>
 
 <div class="wrap">
   <header>
-    <h1>로또 추첨기</h1>
+    <h1><span class="star" aria-hidden="true">★</span> 로또 추첨기 <span class="star" aria-hidden="true">★</span></h1>
     <div class="basisRow">
       <p class="basis" id="basis"></p>
       <button type="button" class="update" id="update" hidden>↻ 업데이트</button>
@@ -498,7 +535,7 @@ function ballColor(n) {
 function makeBall(n) {
   const ball = document.createElement("span");
   ball.className = "ball";
-  ball.style.background = ballColor(n);
+  ball.style.setProperty("--c", ballColor(n));
   ball.textContent = n;
   return ball;
 }
@@ -527,7 +564,7 @@ function copyGame(text, button) {
   }
 }
 
-function renderGames(r) {
+function renderGames(r, animate) {
   const list = $("games");
   list.replaceChildren();
   r.games.forEach((game, i) => {
@@ -538,7 +575,14 @@ function renderGames(r) {
     label.textContent = "ABCDE"[i];
     const balls = document.createElement("div");
     balls.className = "balls";
-    game.forEach((n) => balls.append(makeBall(n)));
+    game.forEach((n, k) => {
+      const ball = makeBall(n);
+      if (animate) {
+        ball.classList.add("drop");
+        ball.style.animationDelay = `${(i * 6 + k) * 45}ms`;   // A줄부터 공이 하나씩 떨어진다
+      }
+      balls.append(ball);
+    });
     const button = document.createElement("button");
     button.type = "button";
     button.className = "copy";
@@ -611,12 +655,12 @@ function renderAxis() {
   }
 }
 
-function render(r) {
+function render(r, animate = true) {
   const last = DRAWS[DRAWS.length - 1];
   $("basis").textContent = last
     ? `${last.draw}회까지 (${last.date} 추첨) · 이번 기준 ${r.basis.from}~${r.basis.to}회`
     : "당첨번호가 없어요.";
-  renderGames(r);
+  renderGames(r, animate);
   renderPatterns(r);
   renderChart(r);
   renderRejected(r);
