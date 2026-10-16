@@ -29,6 +29,7 @@
 }
 html { background: var(--night); }
 body { margin: 0; }
+[hidden] { display: none !important; }
 body {
   min-height: 100vh; color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.55;
   background:
@@ -66,6 +67,7 @@ h1 .star { font-size: 0.7em; vertical-align: 0.18em; }
   background: linear-gradient(180deg, var(--gold-2) 0%, var(--gold) 45%, var(--gold-deep) 100%);
   box-shadow: 0 6px 18px rgba(245, 200, 76, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
+#draw:disabled { opacity: 0.6; cursor: wait; }
 #draw:active { transform: translateY(2px); box-shadow: 0 3px 10px rgba(245, 200, 76, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
 button:focus-visible, summary:focus-visible, a:focus-visible { outline: 3px solid var(--gold-2); outline-offset: 2px; }
 .games { list-style: none; margin: 0; padding: 0; background: var(--panel); border: 1px solid var(--rule); border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35); backdrop-filter: blur(4px); }
@@ -88,6 +90,11 @@ button:focus-visible, summary:focus-visible, a:focus-visible { outline: 3px soli
   60% { opacity: 1; transform: translateY(3px) scale(1.06) rotate(10deg); }
   100% { opacity: 1; transform: none; }
 }
+.ready { display: grid; justify-items: center; gap: 12px; padding: 22px 12px; border: 1.5px dashed var(--rule); border-radius: 16px; background: rgba(23, 31, 82, 0.4); text-align: center; }
+.ready .slots { display: flex; gap: 6px; }
+.ready .slot { width: 31px; height: 31px; border-radius: 50%; border: 1.5px dashed rgba(245, 200, 76, 0.45); background: radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.12), transparent 50%); }
+.ready p { margin: 0; color: var(--muted); font-size: 14px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .copy { font: inherit; font-size: 13px; border: 1px solid var(--rule); background: transparent; color: var(--ink); border-radius: 8px; padding: 5px 9px; cursor: pointer; }
 .notice { margin: 0; color: var(--bad); font-size: 14px; }
 .copybox { margin: 0; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 10px; background: var(--panel-solid); user-select: all; font-variant-numeric: tabular-nums; }
@@ -124,11 +131,17 @@ details > div { display: grid; gap: 10px; padding-bottom: 14px; }
 
   <button type="button" id="draw">번호 뽑기</button>
 
-  <ol class="games" id="games"></ol>
+  <div class="ready" id="ready">
+    <div class="slots" aria-hidden="true"><span class="slot"></span><span class="slot"></span><span class="slot"></span><span class="slot"></span><span class="slot"></span><span class="slot"></span></div>
+    <p>버튼을 누르면 번호 5게임이 나와요</p>
+  </div>
+  <p class="sr-only" id="announce" role="status"></p>
+
+  <ol class="games" id="games" hidden></ol>
   <p class="notice" id="short" hidden></p>
   <p class="copybox" id="copybox" hidden></p>
 
-  <details id="patternBox">
+  <details id="patternBox" hidden>
     <summary id="patternTitle">패턴 20가지</summary>
     <div>
       <p class="small">최근 회차의 번호대 모양(1~10, 11~20, 21~30, 31~40, 41~45에 든 개수)</p>
@@ -137,7 +150,7 @@ details > div { display: grid; gap: 10px; padding-bottom: 14px; }
     </div>
   </details>
 
-  <details id="chartBox">
+  <details id="chartBox" hidden>
     <summary>시험 100게임 번호별 횟수</summary>
     <div>
       <div class="chart" id="chart" role="img" aria-label="번호별 횟수 막대그래프"></div>
@@ -146,7 +159,7 @@ details > div { display: grid; gap: 10px; padding-bottom: 14px; }
     </div>
   </details>
 
-  <details id="rejectBox">
+  <details id="rejectBox" hidden>
     <summary id="rejectTitle">걸러낸 조합</summary>
     <div>
       <p class="small">남들이 많이 고르는 조합은 1등이 돼도 나눠 가질 사람이 많아 버렸어요.</p>
@@ -655,15 +668,40 @@ function renderAxis() {
   }
 }
 
-function render(r, animate = true) {
+const RESULT_BOXES = ["patternBox", "chartBox", "rejectBox"];
+
+/** 위 기준 줄. 번호 추천과 같은 Lotto.recent(최근 100회)로 범위를 잡는다(뽑기 없이). */
+function renderBasis() {
   const last = DRAWS[DRAWS.length - 1];
+  const basis = Lotto.recent(DRAWS, 100);
   $("basis").textContent = last
-    ? `${last.draw}회까지 (${last.date} 추첨) · 이번 기준 ${r.basis.from}~${r.basis.to}회`
+    ? `${last.draw}회까지 (${last.date} 추첨) · 이번 기준 ${basis[0].draw}~${basis[basis.length - 1].draw}회`
     : "당첨번호가 없어요.";
-  renderGames(r, animate);
+}
+
+let drawCount = 0;
+
+/** 첫 화면: 뽑은 번호를 실제로 지우고 안내만 보인다(되돌리기라 게임 칸·부족 안내도 여기서 직접 비운다). */
+function showStart() {
+  $("games").replaceChildren();
+  $("games").hidden = true;
+  $("short").hidden = true;
+  $("copybox").hidden = true;
+  $("announce").textContent = "";
+  for (const id of RESULT_BOXES) $(id).hidden = true;
+  $("ready").hidden = false;
+}
+
+function render(r, animate = true) {
+  renderBasis();
+  renderGames(r, animate);   // 게임 칸·부족 안내는 renderGames만 정한다
   renderPatterns(r);
   renderChart(r);
   renderRejected(r);
+  for (const id of RESULT_BOXES) $(id).hidden = false;
+  $("ready").hidden = true;
+  drawCount += 1;   // 같은 문장이면 화면 읽기 기능이 다시 안 읽을 수 있어 몇 번째인지 붙인다
+  $("announce").textContent = (r.games.length ? `번호 ${r.games.length}게임을 뽑았어요` : $("short").textContent) + ` (${drawCount}번째)`;
 }
 
 function setStatus(text, tone) {
@@ -718,9 +756,9 @@ async function save(draws) {
 
 /** 묶음 하나를 받을 때마다: 추천 계산 → 자료·화면 교체 → 저장(이 순서). */
 async function applyChunk(draws) {
-  const result = Lotto.recommend(draws);
   DRAWS = draws;
-  render(result);
+  renderBasis();
+  showStart();   // 보이던 번호는 옛 자료로 뽑은 것이라 지운다
   await save(draws);
 }
 
@@ -729,9 +767,9 @@ function updateMessage(r) {
   let text;
   if (r.error) {
     const reason = ERROR_TEXT[r.error.kind] || ERROR_TEXT.network;
-    text = r.added ? `${last}회까지 받았어요. 그 뒤는 못 받았어요: ${reason}` : reason;
+    text = r.added ? `${last}회까지 받았어요. 그 뒤는 못 받았어요: ${reason} [번호 뽑기]를 눌러 새 자료로 뽑아 보세요.` : reason;
   } else if (r.added) {
-    text = `${last}회까지 받았어요 (새 회차 ${r.added}개). 번호를 새로 뽑았어요.`;
+    text = `${last}회까지 받았어요 (새 회차 ${r.added}개). [번호 뽑기]를 눌러 새 자료로 뽑아 보세요.`;
   } else {
     text = `이미 최신이에요 (${last}회).`;
   }
@@ -743,6 +781,7 @@ async function onUpdate() {
   const button = $("update");
   if (button.disabled) return;
   button.disabled = true;
+  $("draw").disabled = true;   // 받는 동안 뽑은 번호가 다음 묶음에서 지워지지 않게
   button.textContent = "받는 중…";
   setStatus("동행복권에서 확인하는 중…", "");
   try {
@@ -752,6 +791,7 @@ async function onUpdate() {
     setStatus("뜻밖의 문제가 생겼어요. 다시 눌러 주세요.", "bad");
   } finally {
     button.disabled = false;
+    $("draw").disabled = false;
     button.textContent = "↻ 업데이트";
   }
 }
@@ -765,7 +805,8 @@ if (HOME) {
 } else {
   $("moved").hidden = false;
 }
-render(Lotto.recommend(DRAWS));
+renderBasis();
+showStart();
 </script>
 <script>
 (() => {

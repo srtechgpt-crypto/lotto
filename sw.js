@@ -1,17 +1,17 @@
 "use strict";
 
-const VERSION = "905984b44154";
+const VERSION = "f90440bfdcb3";
 const FILES = {
   ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-  "fonts/BlackHanSans.woff2": "7dc14f9ec9bc8c5f24ae658edcad8dfc12c048372c86a7aedca6f8e4a305a64e",
-  "fonts/IBMPlexSansKR-400.woff2": "b1c67eaed1570852ca2687d95a849703bf099842a7cd9bbbeac9666971d7b15f",
-  "fonts/IBMPlexSansKR-600.woff2": "d337a2a918fafa269dc043957a1a98be1268ba06cc1704555704badc48fd840d",
+  "fonts/BlackHanSans.woff2": "b23e7bbff9bc25dd03d5d9fe616d07d366753051944debeaa559b9b0eada07e8",
+  "fonts/IBMPlexSansKR-400.woff2": "4a0354aa9d0c15bab3ffb56fce83d5e08fb11bfc2b9532b68d181c3b5efd9388",
+  "fonts/IBMPlexSansKR-600.woff2": "05b5e61094d8a7a14f138846310fb57983555c700468556b9732190be0bfe77a",
   "fonts/OFL-BlackHanSans.txt": "c324192c8b3a988bae45a9a7e4ac1258b684739003bda114e0523423440457c9",
   "fonts/OFL-IBMPlexSansKR.txt": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
   "icons/icon-192.png": "ed5c1fe1a967bb43d25e1454a92e8cd75a56c7237e600a581b364ec18db6a982",
   "icons/icon-512.png": "43a57f4b652d0a2c03da2ec9a0b279b30edd6808ed89d050750cc3da0684260a",
   "icons/icon-maskable-512.png": "cf964569258fda8ff101d207c8800442ca416b51b3ccd4f6f098c62feec8a05e",
-  "index.html": "ba18f6565f2d7b256b3c0aadc689f8cbcac73db6f74ae005635da77ebc347c61",
+  "index.html": "817af59c95ab46735eaaf9770e809b5f7f2c50b42714fba6e0c5ff5271191292",
   "manifest.webmanifest": "a3a9c1e97b0e80a8b19aa96df3030ed2b7948e391d5b8daf78a86479ed189e94"
 };
 const CACHE_NAME = "srlotto-" + VERSION;
